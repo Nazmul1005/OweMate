@@ -1,0 +1,33 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum TransactionType {
+  PERSONAL_EXPENSE
+  PERSONAL_INCOME
+  LENT_TO_FRIEND
+  BORROWED_FROM_FRIEND
+}
+
+model Transaction {
+  id               String          @id @default(cuid())
+  amount           Float
+  transaction_type TransactionType
+  friend_name      String?
+  description      String
+  date             DateTime        @default(now())
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([transaction_type])
+  @@index([friend_name])
+  @@index([date])
+}
